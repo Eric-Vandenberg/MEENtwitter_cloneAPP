@@ -16,17 +16,16 @@ app.get('api/tweets', function(req, res){
 	 }
 	});
 	var sortedResult = result.sort(function (a, b) {
-	  if (a.userId > b.userId) {
+	  if (a.created > b.created) {
 	    return 1;
 	  }
-	  if (a.userId < b.userId) {
+	  if (a.created < b.created) {
 	    return -1;
 	  }
 	  // a must be equal to b
 	  return 0;
 	});
-	if(result.length > 0) { 
-		res.sendStatus(200)
+	if(result.length >= 0) { 
 		res.send({tweets: sortedResult}); 
 	} 
 });
