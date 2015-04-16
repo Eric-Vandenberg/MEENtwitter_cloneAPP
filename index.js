@@ -3,19 +3,15 @@ var _ = require('lodash')
   , fixtures = require('./fixtures')
   , app = express()
 
+app.get('/api/users/:userId', function(req, res) {
+  var user = _.find(fixtures.users, 'id', req.params.userId)
 
-app.get('/api/users/:id', function(req, res) {
-  if (!req.param.id) {
-    return res.sendStatus(400)
-  }
   if (!user) {
     return res.sendStatus(404)
   }
-	var useR = _.find(fixtures.users, 'id', req.params.id)
-  res.send({ user: useR })
+
+  res.send({ user: user })
 })
-// var useR = _.find(fixtures.users, 'id', 'billgates')
-// console.log(useR);
 
 
 app.get('/api/tweets', function(req, res) {
@@ -51,6 +47,20 @@ module.exports = server
 
 
 // var app = express();
+
+// app.get('/api/users/:id', function(req, res) {
+//   if (!req.params.id) {
+//     return res.sendStatus(400)
+//   }
+//   var useR = _.find(fixtures.users, 'id', req.params.id)
+//   if (!useR) {
+//     return res.sendStatus(404)
+//   }
+//   res.send({ user: useR });
+
+// })
+// // var useR = _.find(fixtures.users, 'id', 'billgates')
+// // console.log(useR);
 
 // app.get('/api/tweets', function(req, res){
 // 	if(!req.query.userId) {
