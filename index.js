@@ -5,12 +5,18 @@ var _ = require('lodash')
 
 
 app.get('/api/users/:id', function(req, res) {
-	if (!req.param.id) {
-		return res.sendStatus(404)
-	}
-	var useR = _.where(fixtures.users, { id : req.param.id })
-	res.send({ user: useR })
+  if (!req.param.id) {
+    return res.sendStatus(400)
+  }
+  if (!user) {
+    return res.sendStatus(404)
+  }
+	var useR = _.find(fixtures.users, 'id', req.params.id)
+  res.send({ user: useR })
 })
+// var useR = _.find(fixtures.users, 'id', 'billgates')
+// console.log(useR);
+
 
 app.get('/api/tweets', function(req, res) {
   if (!req.query.userId) {
