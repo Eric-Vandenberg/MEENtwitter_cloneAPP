@@ -8,16 +8,17 @@ var _ = require('lodash')
 app.use(bodyParser.json());
 
 app.post('/api/users', function(req, res) {
-  console.log(req.body);
-  if (req.params.userId == req.body.id) {
+  console.log(fixtures.users);
+  var userAlready = _.find(fixtures.users, 'id', req.body.user.id);
+  if (userAlready) {
     return res.sendStatus(409);
   }
-  req.body.followingIds = [];
-  var newUser = req.body;
+  req.body.user.followingIds = [];
+  fixtures.users.push(req.body.user);
 
-  res.sendStatus(200).json(newUser);
-
+  res.json(req.body.user);
 })
+
 
 app.get('/api/users/:userId', function(req, res) {
   var user = _.find(fixtures.users, 'id', req.params.userId)
@@ -40,6 +41,7 @@ app.get('/api/tweets', function(req, res) {
 
   res.send({ tweets: sortedTweets })
 })
+
 
 var host = process.env.HOST || '127.0.0.1';
 var port = process.env.PORT || 3000;
