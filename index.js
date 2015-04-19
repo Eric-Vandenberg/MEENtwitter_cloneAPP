@@ -1,7 +1,23 @@
 var _ = require('lodash')
   , express = require('express')
+  , bodyParser = require('body-parser')
   , fixtures = require('./fixtures')
   , app = express()
+
+
+app.use(bodyParser.json());
+
+app.post('/api/users', function(req, res) {
+  console.log(req.body);
+  if (req.params.userId == req.body.id) {
+    return res.sendStatus(409);
+  }
+  req.body.followingIds = [];
+  var newUser = req.body;
+
+  res.sendStatus(200).json(newUser);
+
+})
 
 app.get('/api/users/:userId', function(req, res) {
   var user = _.find(fixtures.users, 'id', req.params.userId)
@@ -31,6 +47,7 @@ var port = process.env.PORT || 3000;
 var server = app.listen(port, host, function() {
   console.log('I\'m listening on Localhost:' + port + '...');
 });
+
 
 module.exports = server
 
