@@ -9,14 +9,15 @@ app.use(bodyParser.json());
 
 app.post('/api/users', function(req, res) {
   console.log(fixtures.users);
-  var userAlready = _.find(fixtures.users, 'id', req.body.user.id);
+  var user = req.body.user;
+  var userAlready = _.find(fixtures.users, 'id', user.id);
   if (userAlready) {
     return res.sendStatus(409);
   }
-  req.body.user.followingIds = [];
-  fixtures.users.push(req.body.user);
+  user.followingIds = [];
+  fixtures.users.push(user);
 
-  res.json(req.body.user);
+  res.sendStatus(200);
 })
 
 
