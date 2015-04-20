@@ -20,6 +20,17 @@ app.post('/api/users', function(req, res) {
   res.sendStatus(200);
 })
 
+app.post('/api/tweets', function(req, res) {
+  var tweetsArray = fixtures.tweets;
+  var tweet = req.body.tweet;
+  tweet.created = Date.now() / 1000 | 0;
+  tweet.id = fixtures.tweets.length + 1;
+  fixtures.tweets.push(tweet);
+  
+  res.send({ tweet: tweet})
+  
+})
+
 
 app.get('/api/users/:userId', function(req, res) {
   var user = _.find(fixtures.users, 'id', req.params.userId)
