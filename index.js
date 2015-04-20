@@ -24,7 +24,7 @@ app.post('/api/tweets', function(req, res) {
   var tweetsArray = fixtures.tweets;
   var tweet = req.body.tweet;
   tweet.created = Date.now() / 1000 | 0;
-  tweet.id = fixtures.tweets.length + 1;
+  tweet.id = tweetsArray.length + 1;
   fixtures.tweets.push(tweet);
   
   res.send({ tweet: tweet})
