@@ -31,6 +31,15 @@ app.post('/api/tweets', function(req, res) {
   
 })
 
+app.get('/api/tweets/:tweetId', function(req, res) {
+  var tweet = _.find(fixtures.tweets, 'id', req.params.tweetId)
+  console.log(tweet);
+  if(!tweet) {
+    return res.sendStatus(404)
+  }
+  res.send({ tweet: tweet })
+})
+
 
 app.get('/api/users/:userId', function(req, res) {
   var user = _.find(fixtures.users, 'id', req.params.userId)
