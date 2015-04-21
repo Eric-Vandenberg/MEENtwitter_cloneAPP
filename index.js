@@ -1,6 +1,7 @@
 var _ = require('lodash')
   , express = require('express')
   , bodyParser = require('body-parser')
+  , shortId = require('shortid')
   , fixtures = require('./fixtures')
   , app = express()
 
@@ -21,10 +22,9 @@ app.post('/api/users', function(req, res) {
 })
 
 app.post('/api/tweets', function(req, res) {
-  var tweetsArray = fixtures.tweets;
   var tweet = req.body.tweet;
   tweet.created = Date.now() / 1000 | 0;
-  tweet.id = tweetsArray.length + 1;
+  tweet.id = shortId.generate();
   fixtures.tweets.push(tweet);
   
   res.send({ tweet: tweet})
