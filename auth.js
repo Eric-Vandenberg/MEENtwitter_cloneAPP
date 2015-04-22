@@ -5,17 +5,37 @@ var _ 			= require('lodash')
 
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
+  done(null, user.id)
+})
+
 
 passport.deserializeUser(function(id, done) {
-	var userAlready = _.find(fixtures.users, 'id', id);
-	if(userAlready) {
-	done(null, userAlready);
-	} else {
-		done(null, false);
-	}
+  var user = _.find(fixtures.users, 'id', id)
 
-});
+  if (!user) {
+    return done(null, false)
+  }
+
+  done(null, user)
+})
 
 module.exports = passport;
+
+
+
+
+// My Attempt Below (passing)
+
+// passport.serializeUser(function(user, done) {
+//   done(null, user.id);
+// })
+
+// passport.deserializeUser(function(id, done) {
+// 	var userAlready = _.find(fixtures.users, 'id', id);
+// 	if(userAlready) {
+// 	done(null, userAlready);
+// 	} else {
+// 		done(null, false);
+// 	}
+
+// })
