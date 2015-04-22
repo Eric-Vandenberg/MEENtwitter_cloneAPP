@@ -40,12 +40,13 @@ app.get('/api/tweets/:tweetId', function(req, res) {
   res.send({ tweet: tweet })
 })
 
+
 app.delete('/api/tweets/:tweetId', function(req, res) {
   var tweet = _.find(fixtures.tweets, 'id', req.params.tweetId)
   console.log('this is the tweet: ', tweet);
   
   _.remove(fixtures.tweets, function(tweet) {
-    tweet.id == req.params.tweetId;
+    return tweet.id == req.params.tweetId;
   })
 
   if(!tweet) {
