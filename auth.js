@@ -10,10 +10,12 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
 	var userAlready = _.find(fixtures.users, 'id', id);
-
-	if (!userAlready) {
-		done(null, false)
+	if(userAlready) {
+	done(null, userAlready);
+	} else {
+		done(null, false);
 	}
+
 });
 
 module.exports = passport;
