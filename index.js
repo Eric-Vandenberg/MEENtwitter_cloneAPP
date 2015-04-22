@@ -40,15 +40,29 @@ app.get('/api/tweets/:tweetId', function(req, res) {
   res.send({ tweet: tweet })
 })
 
+app.delete('/api/tweets/:tweetId', function(req, res) {
+  var tweet = _.find(fixtures.tweets, 'id', req.params.tweetId)
+  console.log('this is the tweet: ', tweet);
+  
+  _.remove(fixtures.tweets, function(tweet) {
+    tweet.id == req.params.tweetId;
+  })
+
+  if(!tweet) {
+    return res.sendStatus(404);
+  }
+
+  res.sendStatus(200)
+})
+
 
 app.get('/api/users/:userId', function(req, res) {
-  var user = _.find(fixtures.users, 'id', req.params.userId)
-
+  var user = _.find(fixtures.tweets, 'id', req.params.userId)
+  // var match = _.where(fixtures.tweets, { })
   if (!user) {
     return res.sendStatus(404)
   }
-
-  res.send({ user: user })
+  res.sendStatus(200)
 })
 
 
