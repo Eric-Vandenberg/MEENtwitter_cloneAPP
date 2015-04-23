@@ -1,7 +1,27 @@
 var _ 			= require('lodash')
-	, passport 	= require('passport')
 	, bodyParser = require('body-parser')
 	, fixtures 	= require('./fixtures')
+	, passport = require('passport')
+	, LocalStrategy = require('passport-local').Strategy;
+
+
+passport.use(new LocalStrategy({  
+    usernameField: 'id',
+    passwordField: 'password'
+  },
+  function(username, password, done) {
+	User.findOne({ username: username }, function(err, user) {
+		if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
 
 
 passport.serializeUser(function(user, done) {
@@ -18,6 +38,7 @@ passport.deserializeUser(function(id, done) {
 
   done(null, user)
 })
+
 
 module.exports = passport;
 

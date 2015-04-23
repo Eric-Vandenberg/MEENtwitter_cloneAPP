@@ -2,10 +2,12 @@ var _ = require('lodash')
   , express = require('express')
   , bodyParser = require('body-parser')
   , shortId = require('shortid')
-  , passport = require('passport')
   , auth = require('./auth')
   , fixtures = require('./fixtures')
+  , passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy
   , app = express()
+
 
 
 app.use(bodyParser.json());
@@ -22,22 +24,13 @@ app.configure(function() {
 });
 
 
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) { return done(null, false); }
-      if (!user.verifyPassword(password)) { return done(null, false); }
-      return done(null, user);
-    });
-  }
-));
-
-
 app.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('/'),
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true 
   });
 
 
@@ -109,6 +102,7 @@ app.get('/api/tweets', function(req, res) {
 
 var host = process.env.HOST || '127.0.0.1';
 var port = process.env.PORT || 3000;
+
  
 var server = app.listen(port, host, function() {
   console.log('I\'m listening on Localhost:' + port + '...');
