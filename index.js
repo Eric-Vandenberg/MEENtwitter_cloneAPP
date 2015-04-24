@@ -12,6 +12,8 @@ var _ = require('lodash')
 
 app.use(bodyParser.json());
 
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.configure(function() {
   app.use(express.static(__dirname + '/../../public'));
