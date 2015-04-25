@@ -21,6 +21,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+// // Here come routes definitions.
+
+
 // app.post('/login', 
 //   passport.authenticate('local', { failureRedirect: '/login' }),
 //   function(req, res) {
@@ -95,12 +98,12 @@ app.get('/api/tweets', function(req, res) {
 })
 
 
-app.listen(app.get('port'), function() {
+var server = app.listen(app.get('port'), function() {
   console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
 });
 
 
-module.exports = app;
+module.exports = server;
 
 
 
