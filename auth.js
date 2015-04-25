@@ -5,38 +5,38 @@ var _ 			       = require('lodash')
 	, LocalStrategy  = require('passport-local').Strategy
 
 
-passport.use(new LocalStrategy({
-  usernameField: 'id',
-  passwordField: 'password'
-  },
-  function(username, password, done) {
-    var user = _.find(fixtures.users,'id', username)
-    var pass = _.find(fixtures.users, 'password', password)
-    if (!user) {
-      return done(null, false, { message: 'Incorrect username.' })
-    }
-    if (!pass) {
-      return done(null, false, { message: 'Incorrect password.' })
-    }
-    return done(null, user)
+// passport.use(new LocalStrategy({
+//   usernameField: 'id',
+//   passwordField: 'password'
+//   },
+//   function(username, password, done) {
+//     var user = _.find(fixtures.users,'id', username)
+//     var pass = _.find(fixtures.users, 'password', password)
+//     if (!user) {
+//       return done(null, false, { message: 'Incorrect username.' })
+//     }
+//     if (!pass) {
+//       return done(null, false, { message: 'Incorrect password.' })
+//     }
+//     return done(null, user)
+//   }
+// ))
+
+function verify(username, password, done) {
+  var user = _.find(fixtures.users, 'id', username)
+
+  if (!user) {
+    return done(null, false, { message: 'Incorrect username.' })
   }
-))
 
-// function verify(username, password, done) {
-//   var user = _.find(fixtures.users, 'id', username)
+  if (user.password !== password) {
+    return done(null, false, { message: 'Incorrect password.' })
+  }
 
-//   if (!user) {
-//     return done(null, false, { message: 'Incorrect username.' })
-//   }
+  done(null, user)
+}
 
-//   if (user.password !== password) {
-//     return done(null, false, { message: 'Incorrect password.' })
-//   }
-
-//   done(null, user)
-// }
-
-// passport.use(new LocalStrategy(verify))
+passport.use(new LocalStrategy(verify))
 
 
 passport.serializeUser(function(user, done) {

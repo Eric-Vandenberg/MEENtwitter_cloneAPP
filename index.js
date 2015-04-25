@@ -1,39 +1,33 @@
-var _ = require('lodash')
-  , express = require('express')
-  , bodyParser = require('body-parser')
-  , shortId = require('shortid')
-  , auth = require('./auth')
-  , fixtures = require('./fixtures')
-  , passport = require('passport')
-  , LocalStrategy = require('passport-local').Strategy
-  , app = express()
+var _             = require('lodash')
+  , express       = require('express')
+  , session       = require('express-session')
+  , bodyParser    = require('body-parser')
+  , cookieParser  = require('cookie-parser')
+  , shortId       = require('shortid')
+  , fixtures      = require('./fixtures')
+  , passport      = require('./auth')
+  , app           = express()
 
 
-
+app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
-
+app.use(cookieParser());
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.configure(function() {
-  app.use(express.static(__dirname + '/../../public'));
-  app.use(express.cookieParser());
-  app.use(express.bodyParser());
-  app.use(express.session({ secret: 'keyboard cat' }));
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(app.router);
-});
 
-
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/'),
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true 
-  });
+// app.post('/login', 
+//   passport.authenticate('local', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     successRedirect: '/',
+//     failureRedirect: '/login',
+//     failureFlash: true 
+//   });
 
 
 app.post('/api/users', function(req, res) {
@@ -82,7 +76,6 @@ app.delete('/api/tweets/:tweetId', function(req, res) {
 
 app.get('/api/users/:userId', function(req, res) {
   var user = _.find(fixtures.tweets, 'id', req.params.userId)
-  // var match = _.where(fixtures.tweets, { })
   if (!user) {
     return res.sendStatus(404)
   }
@@ -102,16 +95,12 @@ app.get('/api/tweets', function(req, res) {
 })
 
 
-var host = process.env.HOST || '127.0.0.1';
-var port = process.env.PORT || 3000;
-
- 
-var server = app.listen(port, host, function() {
-  console.log('I\'m listening on Localhost:' + port + '...');
+app.listen(app.get('port'), function() {
+  console.log('Express server listening on port %d in %s mode', app.get('port'), app.get('env'));
 });
 
 
-module.exports = server
+module.exports = app;
 
 
 
