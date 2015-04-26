@@ -21,16 +21,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-// // Here come routes definitions.
+// Here come routes definitions.
 
 
-// app.post('/login', 
-//   passport.authenticate('local', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     successRedirect: '/',
-//     failureRedirect: '/login',
-//     failureFlash: true 
-//   });
+app.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return res.sendStatus(500); }
+    if (!username || !password) { return res.sendStatus(403); }
+    
+  })(req, res, next);
+});
 
 
 app.post('/api/users', function(req, res) {

@@ -5,23 +5,6 @@ var _ 			       = require('lodash')
 	, LocalStrategy  = require('passport-local').Strategy
 
 
-// passport.use(new LocalStrategy({
-//   usernameField: 'id',
-//   passwordField: 'password'
-//   },
-//   function(username, password, done) {
-//     var user = _.find(fixtures.users,'id', username)
-//     var pass = _.find(fixtures.users, 'password', password)
-//     if (!user) {
-//       return done(null, false, { message: 'Incorrect username.' })
-//     }
-//     if (!pass) {
-//       return done(null, false, { message: 'Incorrect password.' })
-//     }
-//     return done(null, user)
-//   }
-// ))
-
 function verify(username, password, done) {
   var user = _.find(fixtures.users, 'id', username)
 
@@ -61,6 +44,24 @@ module.exports = passport;
 
 
 // My Attempt Below (passing)
+// 
+// 
+// passport.use(new LocalStrategy({
+//   usernameField: 'id',
+//   passwordField: 'password'
+//   },
+//   function(username, password, done) {
+//     var user = _.find(fixtures.users,'id', username)
+//     var pass = _.find(fixtures.users, 'password', password)
+//     if (!user) {
+//       return done(null, false, { message: 'Incorrect username.' })
+//     }
+//     if (!pass) {
+//       return done(null, false, { message: 'Incorrect password.' })
+//     }
+//     return done(null, user)
+//   }
+// ))
 
 // passport.serializeUser(function(user, done) {
 //   done(null, user.id);
