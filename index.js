@@ -26,11 +26,14 @@ app.use(passport.session());
 
 app.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
-    if (err) { return res.sendStatus(500); }
-    if (!username || !password) { return res.sendStatus(403); }
-    
+    if (err) { return next(err); }
+    if (!user) { return res.redirect('/login'); }
+    req.login(user, function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/users/' + user.username);
+    })
   })(req, res, next);
-});
+})
 
 
 app.post('/api/users', function(req, res) {
