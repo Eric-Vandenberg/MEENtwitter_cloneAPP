@@ -69,7 +69,15 @@ app.get('/api/tweets/:tweetId', function(req, res) {
 })
 
 
-app.delete('/api/tweets/:tweetId', function(req, res) {
+function ensureAuthentication(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  res.sendStatus(403)
+}
+
+
+app.delete('/api/tweets/:tweetId', ensureAuthentication, function(req, res) {
   var removedTweets = _.remove(fixtures.tweets, 'id', req.params.tweetId)
 
   if (removedTweets.length == 0) {
@@ -124,19 +132,9 @@ module.exports = server;
 
 // var app = express();
 
-// app.get('/api/users/:id', function(req, res) {
-//   if (!req.params.id) {
-//     return res.sendStatus(400)
-//   }
-//   var useR = _.find(fixtures.users, 'id', req.params.id)
-//   if (!useR) {
-//     return res.sendStatus(404)
-//   }
-//   res.send({ user: useR });
 
 // })
-// // var useR = _.find(fixtures.users, 'id', 'billgates')
-// // console.log(useR);
+
 
 // app.get('/api/tweets', function(req, res){
 // 	if(!req.query.userId) {
