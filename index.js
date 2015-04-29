@@ -44,7 +44,7 @@ app.post('/api/auth/login', function(req, res, next) {
 
 
 app.post('/api/users', function(req, res) {
-  console.log(fixtures.users);
+  //console.log(fixtures.users);
   var user = req.body.user;
   var userAlready = _.find(fixtures.users, 'id', user.id);
   if (userAlready) {
@@ -61,9 +61,11 @@ app.post('/api/tweets', ensureAuthentication, function(req, res) {
 
   tweet.userId = req.user.id;
   // Your route implementation
+  // 
+  //console.log("This is the tweet after override: ", tweet);
   var userMatch = _.find(fixtures.tweets, 'userId' , req.user.id)
   // req.user is the authenticated user
-  console.log("this is the req.user: ", req.user)
+  //console.log("This is the req.user: ", req.user)
   if (!userMatch) {
     return res.sendStatus(403);
   }
@@ -79,7 +81,7 @@ app.post('/api/tweets', ensureAuthentication, function(req, res) {
 
 app.get('/api/tweets/:tweetId', function(req, res) {
   var tweet = _.find(fixtures.tweets, 'id', req.params.tweetId)
-  console.log(tweet);
+  //console.log(tweet);
   if(!tweet) {
     return res.sendStatus(404)
   }
@@ -88,7 +90,7 @@ app.get('/api/tweets/:tweetId', function(req, res) {
 
 
 app.delete('/api/tweets/:tweetId', ensureAuthentication, function(req, res) {
-  // Your route implementation
+  console.log("This is the req.user: ", req.user)
   var userMatch = _.find(fixtures.tweets, 'userId', req.user)
   // req.user is the authenticated user
   if (!userMatch) {
@@ -98,7 +100,6 @@ app.delete('/api/tweets/:tweetId', ensureAuthentication, function(req, res) {
   if (removedTweets.length == 0) {
     return res.sendStatus(404)
   }
-
   res.sendStatus(200)
 })
 
