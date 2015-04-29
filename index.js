@@ -21,6 +21,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+function ensureAuthentication(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  res.sendStatus(403)
+}
+
 // Here come routes definitions.
 
 
@@ -49,15 +56,24 @@ app.post('/api/users', function(req, res) {
   res.sendStatus(200);
 })
 
-app.post('/api/tweets', function(req, res) {
-  var tweet = req.body.tweet;
-  tweet.created = Date.now() / 1000 | 0;
-  tweet.id = shortId.generate();
-  fixtures.tweets.push(tweet);
-  
+app.post('/api/tweets', ensureAuthentication, function(req, res) {
+  // Your route implementation
+  var userMatch = _.find(fixtures.tweets, 'userId', req.user.id)
+  // req.user is the authenticated user
+  console.log(userMatch);
+  var userMatchByUserId = _.find(fixtures.tweets, 'userId', req.user.id)
+  if (!userMatch) {
+    return res.sendStatus(403);
+  }
+  if (userMatchByUserId && userMatch) {
+    var tweet = req.body.tweet;
+    tweet.created = Date.now() / 1000 | 0;
+    tweet.id = shortId.generate();
+    fixtures.tweets.push(tweet);
+  }
   res.send({ tweet: tweet})
-  
 })
+
 
 app.get('/api/tweets/:tweetId', function(req, res) {
   var tweet = _.find(fixtures.tweets, 'id', req.params.tweetId)
@@ -69,17 +85,14 @@ app.get('/api/tweets/:tweetId', function(req, res) {
 })
 
 
-function ensureAuthentication(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next()
-  }
-  res.sendStatus(403)
-}
-
-
 app.delete('/api/tweets/:tweetId', ensureAuthentication, function(req, res) {
+  // Your route implementation
+  var userMatch = _.find(fixtures.tweets, 'userId', req.user)
+  // req.user is the authenticated user
+  if (!userMatch) {
+    return res.sendStatus(403);
+  }
   var removedTweets = _.remove(fixtures.tweets, 'id', req.params.tweetId)
-
   if (removedTweets.length == 0) {
     return res.sendStatus(404)
   }
