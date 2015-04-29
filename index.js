@@ -57,21 +57,23 @@ app.post('/api/users', function(req, res) {
 })
 
 app.post('/api/tweets', ensureAuthentication, function(req, res) {
-    console.log("This is the user: ");
-    // Your route implementation
-    var userMatch = _.find(fixtures.tweets, 'userId' , req.user.id)
-    // req.user is the authenticated user
+  var tweet = req.body.tweet;
 
-    if (!userMatch) {
-      return res.sendStatus(403);
-    }
-    if (userMatch) {
-      var tweet = req.body.tweet;
-      tweet.created = Date.now() / 1000 | 0;
-      tweet.id = shortId.generate();
-      fixtures.tweets.push(tweet);
-    }
-    res.send({ tweet: tweet})
+  tweet.userId = req.user.id;
+  // Your route implementation
+  var userMatch = _.find(fixtures.tweets, 'userId' , req.user.id)
+  // req.user is the authenticated user
+  console.log("this is the req.user: ", req.user)
+  if (!userMatch) {
+    return res.sendStatus(403);
+  }
+  if (userMatch) {
+    var tweet = req.body.tweet;
+    tweet.created = Date.now() / 1000 | 0;
+    tweet.id = shortId.generate();
+    fixtures.tweets.push(tweet);
+  }
+  res.send({ tweet: tweet})
 })
 
 
